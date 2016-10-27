@@ -1,9 +1,12 @@
 var request_lib = require("request"),
-  _ = require('cheerio');
+  _ = require('cheerio'),
+  WebSocket = require('ws');
 
 var config = require("./config.js");
 
-function Browser() {
+function Browser(client) {
+
+  this.client = client;
 
   /**
    * Creates a session for browser requests
@@ -21,6 +24,14 @@ function Browser() {
 
   this.stackexchange = {};
 
+  this.attempting = {};
+
+  this.async = (fn) => {
+    return new Promise(fn).catch((err) => {
+      console.log(new Error(err));
+    })
+  }
+
   /**
    * Create a new HTTP request
    * @param  {string} method HTTP request method
@@ -29,7 +40,7 @@ function Browser() {
    * @return {Promise}       JS Promise Object
    */
   this.request = (method, url, args) => {
-    return new Promise((resolve, reject) => {
+    return this.async((resolve, reject) => {
 
       var options = {
         method: method,
@@ -41,14 +52,12 @@ function Browser() {
 
       this.http_request(options, (error, response) => {
 
-        if (error) reject(error);
+        if (error) reject("Request failed to " + url);
 
         resolve(response);
 
       });
-    }).catch(() => {
-      throw new Error("Request failed to " + url)
-    });;
+    });
   };
 
   /**
@@ -92,33 +101,31 @@ function Browser() {
 
     var self = this;
 
-    return new Promise((resolve, reject) => {
+    return this.async((resolve, reject) => {
       resolve(self.get(url).then(self.keyFromHTML));
     });
   }
 
   this.keyFromHTML = (res) => {
-    return new Promise((resolve, reject) => {
+    return this.async((resolve, reject) => {
       var key = this.$(res.body, "input[name='fkey']").val();
-
       if (key.length) resolve(key);
-      reject("Couldn't find key!")
+      reject("Couldn't find key input at `" + res.request.uri.href + "`!")
     });
   }
 
   this.openid_loginWithKey = (key) => {
     var self = this;
-    return new Promise((resolve, reject) => {
+    return this.async((resolve, reject) => {
       self.post(self.openid.submit, {
         email: this.openid.creds.email,
         password: this.openid.creds.password,
         fkey: key
       }).then((res) => {
         if (res.request.uri.href === self.openid.confirm) resolve(res);
-        reject("Username/Password invalid!");
+
+        reject("StackExchange username/password invalid!");
       });
-    }).catch((err) => {
-      throw new Error(err);
     });
   };
 
@@ -132,11 +139,79 @@ function Browser() {
     return this.getKey(this.stackexchange.key).then(this.site_loginWithKey);
   }
 
+  this.getWSUrl = () => {
+    var self = this;
+
+    return this.async((resolve, reject) => {
+      self.post("http://" + self.chost + "/ws-auth/", {
+        roomid: self.attempting.join.id,
+        fkey: self.attempting.join.key
+      }).then((response) => {
+        resolve(JSON.parse(response.body));
+      });
+    });
+  }
+
+  this.getEventCount = (room_key) => {
+    var self = this;
+
+    return this.async((resolve, reject) => {
+      self.post("http://" + self.chost + "/chats/" + self.attempting.join.id + "/events", {
+        mode: "events",
+        msgCount: 0,
+        fkey: self.attempting.join.key
+      }).then((response) => {
+
+        resolve(JSON.parse(response.body));
+      });
+    });
+  }
+
+  this.connectToWS = (data) => {
+    var self = this;
+
+    return this.async((resolve, reject) => {
+      var url = data[0].url + "?l=" + data[1].time;
+
+      this.attempting.join.ws = new WebSocket(url, {
+        origin: "http://" + self.chost
+      });
+
+      if (self.attempting.join.ws.readyState === 0) {
+        var room = this.attempting.join
+        delete this.attempting.join
+        resolve(room);
+      }
+    })
+
+
+  }
+
+  this.join_room = (room) => {
+    var self = this;
+
+
+    this.attempting.join = room;
+    return this.async((resolve, reject) => {
+      this.getKey("http://" + this.chost + "/rooms/" + room.id).then((key) => {
+        room.key = key;
+
+        Promise.all([
+            self.getWSUrl(),
+            self.getEventCount()
+          ]).then(self.connectToWS)
+          .then(resolve);
+      })
+    })
+
+
+  }
+
   this.site_loginWithKey = (key) => {
 
     this.stackexchange.fkey = key;
     var self = this;
-    return new Promise((resolve, reject) => {
+    return this.async((resolve, reject) => {
       self.post(self.stackexchange.submit, {
         'oauth_version': '',
         'oauth_server': '',
@@ -145,16 +220,16 @@ function Browser() {
       }).then((res) => {
         if (res.request.uri.href === self.stackexchange.confirm) {
           self.loggedIn = true;
-          resolve(res);
+          resolve(self.client);
         }
-        reject("Username/Password invalid!");
+        reject("Couldn't login to " + self.host + " using OpenID!");
       });
-    }).catch((err) => {
-      throw new Error(err);
     });
   };
 
   this.login = (host, email, password) => {
+    this.host = host;
+    this.chost = "chat." + host;
 
     this.openid.creds.email = email;
     this.openid.creds.password = password;
@@ -170,4 +245,4 @@ function Browser() {
 
 }
 
-module.exports = new Browser
+module.exports = Browser
