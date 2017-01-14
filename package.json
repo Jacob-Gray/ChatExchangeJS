@@ -1,0 +1,14 @@
+{
+  "name": "ChatExchangeJS",
+  "version": "1.0.0",
+  "description": "A Node.js wrapper for the Stack Exchange chat system",
+  "main": "client.js",
+  "repository": "git@github.com:Jacob-Gray/ChatExchangeJS.git",
+  "author": "Jacob Gray <jacob@jacobgray.me>",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "request": "^2.79.0",
+    "ws": "^1.1.1"
+  }
+}

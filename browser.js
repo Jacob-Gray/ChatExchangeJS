@@ -28,7 +28,7 @@ function Browser(client) {
 
   this.async = (fn) => {
     return new Promise(fn).catch((err) => {
-      console.log(new Error(err));
+			console.log(err)
     })
   }
 
@@ -109,6 +109,7 @@ function Browser(client) {
   this.keyFromHTML = (res) => {
     return this.async((resolve, reject) => {
       var key = this.$(res.body, "input[name='fkey']").val();
+			console.log(this.$(res.body, "input[name='fkey']").val())
       if (key.length) resolve(key);
       reject("Couldn't find key input at `" + res.request.uri.href + "`!")
     });
