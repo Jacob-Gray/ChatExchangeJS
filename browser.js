@@ -173,16 +173,17 @@ function Browser(client) {
     return this.async((resolve, reject) => {
       var url = data[0].url + "?l=" + data[1].time;
 
-      this.attempting.join.ws = new WebSocket(url, {
+      self.attempting.join.ws = new WebSocket(url, {
         origin: "http://" + self.chost
       });
 
-      if (self.attempting.join.ws.readyState === 0) {
-        var room = this.attempting.join
-        delete this.attempting.join
+      self.attempting.join.ws.on("open", ()=>{
+        var room = self.attempting.join
+        delete self.attempting.join
         resolve(room);
-      }
-    })
+      })
+
+    });
 
 
   }
