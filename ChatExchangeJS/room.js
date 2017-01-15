@@ -1,5 +1,7 @@
 var EventManager = require("./events");
 
+var config = require("./config.js");
+
 function Room(client, id) {
   this.client = client;
   this.id = id;
@@ -16,6 +18,10 @@ function Room(client, id) {
   this.on = this.events.listen;
 
 	this.listener = this.events.listener;
+
+	this.sendMessage = text =>{
+		return this.client._br.post(config.chat.sendMessage(this.client.host, this.id), {fkey: this.client.fkey, text: text});
+	}
 }
 
 module.exports = Room;

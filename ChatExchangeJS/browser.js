@@ -109,7 +109,6 @@ function Browser(client) {
   this.keyFromHTML = (res) => {
     return this.async((resolve, reject) => {
       var key = this.$(res.body, "input[name='fkey']").val();
-			console.log(this.$(res.body, "input[name='fkey']").val())
       if (key.length) resolve(key);
       reject("Couldn't find key input at `" + res.request.uri.href + "`!")
     });
@@ -211,10 +210,35 @@ function Browser(client) {
 
   }
 
+	this.fetchUserInfo = () => {
+		return this.async((resolve, reject) => {
+
+			console.log("Fetching user info")
+			this.get("http://chat."+this.host).then(response => {
+
+				var key = this.$(response.body, "input[name='fkey']").val();
+				var user = this.$(response.body, ".topbar-menu-links a").html();
+
+				console.log(user)
+
+
+				if (key.length && user.length){
+					this.client.fkey = key;
+					this.client.user = user;
+					resolve(this.client);
+				}
+
+				reject();
+			})
+		});
+	}
+
   this.site_loginWithKey = (key) => {
 
     this.stackexchange.fkey = key;
+
     var self = this;
+
     return this.async((resolve, reject) => {
       self.post(self.stackexchange.submit, {
         'oauth_version': '',
@@ -225,9 +249,9 @@ function Browser(client) {
         if (res.request.uri.href === self.stackexchange.confirm) {
 
           self.loggedIn = true;
-          resolve(self.client);
+
+					self.fetchUserInfo().then(resolve).catch(()=>reject("Couldn't login to " + self.host + " using OpenID!"));
         }
-        reject("Couldn't login to " + self.host + " using OpenID!");
       });
     });
   };
