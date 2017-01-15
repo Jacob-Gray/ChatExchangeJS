@@ -213,14 +213,10 @@ function Browser(client) {
 	this.fetchUserInfo = () => {
 		return this.async((resolve, reject) => {
 
-			console.log("Fetching user info")
 			this.get("http://chat."+this.host).then(response => {
 
 				var key = this.$(response.body, "input[name='fkey']").val();
 				var user = this.$(response.body, ".topbar-menu-links a").html();
-
-				console.log(user)
-
 
 				if (key.length && user.length){
 					this.client.fkey = key;
