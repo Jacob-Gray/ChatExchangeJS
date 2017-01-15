@@ -181,6 +181,8 @@ function Browser(client) {
       self.attempting.join.ws.on("open", ()=>{
         var room = self.attempting.join
         delete self.attempting.join
+
+				room.listener(room.ws);
         resolve(room);
       })
 
@@ -221,6 +223,7 @@ function Browser(client) {
         fkey: key
       }).then((res) => {
         if (res.request.uri.href === self.stackexchange.confirm) {
+
           self.loggedIn = true;
           resolve(self.client);
         }
