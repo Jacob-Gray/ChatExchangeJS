@@ -5,13 +5,15 @@ var user = require("./user.json")
 //Function called when joining a room
 function Room(room) {
 
+	console.log("Joined room " + room.id + "!")
+
 	//Add event listener to this room
 	room.on("message", msg => {
 
 		//NOTE: The objects that an even listener returns _will_ change in the future, use with caution!
 
 		console.log("Received message:");
-		console.log(msg)
+		console.log(msg);
 
 		//switch with message content
 		switch (msg.content) {
@@ -47,6 +49,8 @@ function Room(room) {
 
 //This is the user session. All actions that require the user to be logged in should be done in here.
 function Session(me) {
+
+	console.log("Logged in to " + me.host + "!")
 
 	//Join room, then run room function
 	me.join(133210).then(Room);
