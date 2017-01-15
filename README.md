@@ -3,7 +3,7 @@ A Node.js wrapper for the Stack Exchange chat system.
 
 A demo can be seen in `demo.js`.
 
-To run the demo, create a `user.json` file in the project dir, and add the bot username and account to it.
+To run the demo, create a `user.json` file in the project dir, and add the bot username and password to it.
 
 Then, just run `node demo`.
 
