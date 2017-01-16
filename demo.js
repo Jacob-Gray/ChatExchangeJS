@@ -16,14 +16,16 @@ function Room(room) {
 
 		var command = msg.content.split(" ");
 
-		switch(command[0]){
+		console.log(command)
+
+		switch(command.shift()){
 			case "!edit":
-				room.editMessage(command[1], command[2]);
+				room.editMessage(command.shift(), command.join(" "));
 				break;
 			case "!delete":
-				room.deleteMessage(command[1]);
+				room.deleteMessage(command.join(" "));
 				break;
-				
+
 			case "!help":
 
 				//Send message to room
