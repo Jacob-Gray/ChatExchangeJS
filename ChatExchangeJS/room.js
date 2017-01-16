@@ -19,9 +19,11 @@ function Room(client, id) {
 
 	this.listener = this.events.listener;
 
-	this.sendMessage = text =>{
-		return this.client._br.post(config.chat.sendMessage(this.client.host, this.id), {fkey: this.client.fkey, text: text});
-	}
+	this.sendMessage = text => this.client._br.post(config.chat.sendMessage(this.client.host, this.id), {fkey: this.client.fkey, text: text});
+
+	this.editMessage = (id, text) => this.client._br.post(config.chat.editMessage(this.client.host, id), {fkey: this.client.fkey, text: text});
+
+	this.deleteMessage = id => this.client._br.post(config.chat.deleteMessage(this.client.host, id), {fkey: this.client.fkey});
 }
 
 module.exports = Room;

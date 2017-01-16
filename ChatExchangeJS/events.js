@@ -31,6 +31,10 @@ function ChatEvent(info){
 	}
 
 	this.type = eventTypes[this.event_type];
+
+	this.reply = msg => {
+		if(this.message_id) this.room.sendMessage(":" + this.message_id + " " + msg);
+	}
 }
 
 function EventManager(room){
@@ -62,9 +66,13 @@ function EventManager(room){
 			var roomEvent = data["r" + this.room.id];
 
 			if(roomEvent && roomEvent.e){
+
+				console.log(roomEvent)
 				roomEvent.e.forEach(item => {
 
 					var e = new ChatEvent(item);
+
+					e.room = this.room;
 
 					if(e.type) this.trigger(e.type, e);
 				})

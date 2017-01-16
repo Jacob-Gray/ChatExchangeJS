@@ -217,10 +217,14 @@ function Browser(client) {
 
 				var key = this.$(response.body, "input[name='fkey']").val();
 				var user = this.$(response.body, ".topbar-menu-links a").html();
+				var id = this.$(response.body, ".topbar-menu-links a").attr("href").split("/");
+
+				id = id[id.length -2];
 
 				if (key.length && user.length){
 					this.client.fkey = key;
 					this.client.user = user;
+					this.client.id = id;
 					resolve(this.client);
 				}
 

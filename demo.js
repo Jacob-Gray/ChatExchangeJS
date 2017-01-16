@@ -12,11 +12,18 @@ function Room(room) {
 
 		//NOTE: The objects that an even listener returns _will_ change in the future, use with caution!
 
-		console.log("Received message:");
-		console.log(msg);
+		console.log("Received message:", msg.content);
 
-		//switch with message content
-		switch (msg.content) {
+		var command = msg.content.split(" ");
+
+		switch(command[0]){
+			case "!edit":
+				room.editMessage(command[1], command[2]);
+				break;
+			case "!delete":
+				room.deleteMessage(command[1]);
+				break;
+				
 			case "!help":
 
 				//Send message to room
@@ -29,9 +36,7 @@ function Room(room) {
 				break;
 			case "!reply":
 
-				//NOTE: A replacement for this is coming soon.
-				//Reply to `!reply` message
-				room.sendMessage(":" + msg.message_id + " replied!");
+				msg.reply("here's a reply!")
 				break;
 		}
 	});
@@ -50,7 +55,7 @@ function Room(room) {
 //This is the user session. All actions that require the user to be logged in should be done in here.
 function Session(me) {
 
-	console.log("Logged in to " + me.host + "!")
+	console.log("Logged in to " + me.host + " as " + me.user + "(ID #" + me.id + ")!")
 
 	//Join room, then run room function
 	me.join(133210).then(Room);

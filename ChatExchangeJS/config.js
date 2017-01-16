@@ -12,7 +12,9 @@ var config = {
     }
   },
 	"chat":{
-		"sendMessage": (host, room) => "http://chat." + host + "/chats/" + room + "/messages/new"
+		"sendMessage": (host, room) => "http://chat." + host + "/chats/" + room + "/messages/new",
+		"editMessage": (host, id) => "http://chat." + host + "/messages/" + id,
+		"deleteMessage": (host, id) => "http://chat." + host + "/messages/" + id + "/delete",
 	}
 }
 module.exports = config;
