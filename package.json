@@ -6,6 +6,7 @@
   "repository": "git@github.com:Jacob-Gray/ChatExchangeJS.git",
   "author": "Jacob Gray <jacob@jacobgray.me>",
   "license": "GPL-3.0",
+	"keywords": ["stackexchange", "chat", "chatexchange", "api"],
   "dependencies": {
     "cheerio": "^0.22.0",
     "request": "^2.79.0",
