@@ -1,0 +1,80 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>ChatExchangeJS</title>
+	<meta name="description" content="A Node.js wrapper for the Stack Exchange chat system, allowing the ability to interact with the chat.">
+	<meta name="author" content="Jacob Gray">
+
+	<link rel="stylesheet" href="css/styles.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500" rel="stylesheet">
+</head>
+
+<body>
+
+	<header>
+		<h1>ChatExchangeJS</h1>
+		<span>A Node.js wrapper for the Stack Exchange chat system.</span>
+		<pre data-clipboard-text="npm install chatexchange" class="npm-install">npm install chatexchangejs</pre>
+		<div class="npm-copied">
+			Copied!
+		</div>
+	</header>
+	<main>
+		<section class="about">
+			<h2>What is ChatExchangeJS?</h2>
+			<p>
+				ChatExchangeJS is a Node.js wrapper library for the Stack Exchange chats. It allows you to interact with the chat from your code, allowing the creation of bots and the like.
+			</p>
+			<p>
+				Features:
+				<ul>
+					<li><span>Message API:</span> Easily send, receive, edit and delete chat messages.</li>
+					<li><span>Event API:</span> React to any event type; From stars to notifications.</li>
+					<li><span>Actions API:</span> Do anything a user can do. Star messages, register for events, and much more.</li>
+					<li><span>Browser:</span> Send requests to the Stack Exchange site as a logged in user.</li>
+				</ul>
+			</p>
+			<p>
+				Don't want to use Node.js? There are ChatExchange libraries for <a href="https://github.com/Manishearth/ChatExchange">Python</a> and <a href="https://github.com/ArcticEcho/ChatExchange.Net">.NET 4.5</a>.
+			</p>
+		</section>
+		<section class="install">
+			<h2>Installation</h2>
+			<p>
+				Installing ChatExchangeJS, like most Node.js modules, couldn't be easier:
+			</p>
+			<pre>npm install chatexchangejs</pre>
+			<p>
+				Or <code>yarn</code>, if you're hip:
+			</p>
+			<pre>yarn add chatexchangejs</pre>
+
+			<p>
+				You can also <a href="https://github.com/Jacob-Gray/ChatExchangeJS/archive/master.zip">download the zip</a>, or <a href="https://github.com/Jacob-Gray/ChatExchangeJS/">clone it from github</a>.
+			</p>
+		</section>
+	</main>
+
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.16/clipboard.min.js"></script>
+<script>
+
+var clipboard = new Clipboard('.npm-install');
+
+clipboard.on('success', function(e) {
+    e.trigger.classList.add("copied");
+		setTimeout(function(){
+			e.trigger.classList.remove("copied");
+		}, 7000);
+
+    e.clearSelection();
+});
+</script>
+
+</html>
