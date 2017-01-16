@@ -13,13 +13,13 @@ This library is still missing some major features, especially when it comes to e
 ###Installation
 Install from NPM:
 ```
-npm install chatexchange
+npm install chatexchangejs
 ```
 
 ###Usage:
 
 ```javascript
-var Client = require("chatexchange");
+var Client = require("chatexchangejs");
 
 //Enter the bot users creds here
 var user = {email:"myemail", password: "mypassword"};
