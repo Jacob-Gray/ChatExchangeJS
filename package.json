@@ -1,6 +1,6 @@
 {
-  "name": "ChatExchangeJS",
-  "version": "1.0.0",
+  "name": "chatexchange",
+  "version": "1.0.1",
   "description": "A Node.js wrapper for the Stack Exchange chat system",
   "main": "ChatExchangeJS/client.js",
   "repository": "git@github.com:Jacob-Gray/ChatExchangeJS.git",
