@@ -11,7 +11,11 @@
 	<meta name="author" content="Jacob Gray">
 
 	<link rel="stylesheet" href="css/styles.css">
-<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+
+	<!-- Syntax -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
 </head>
 
 <body>
@@ -25,6 +29,11 @@
 		</div>
 	</header>
 	<main>
+		<section class="warn">
+			<p>
+				Note: This library is still in development! Some features may be missing/not in a working state. While this library is functional, use with caution.
+			</p>
+		</section>
 		<section class="about">
 			<h2>What is ChatExchangeJS?</h2>
 			<p>
@@ -58,6 +67,16 @@
 				You can also <a href="https://github.com/Jacob-Gray/ChatExchangeJS/archive/master.zip">download the zip</a>, or <a href="https://github.com/Jacob-Gray/ChatExchangeJS/">clone it from github</a>.
 			</p>
 		</section>
+		<section class="usage">
+			<h2>Using ChatExchangeJS</h2>
+			<p>
+				ChatExchangeJS is built to be simple to use. Because Node.js requests are <a href="http://stackoverflow.com/questions/748175/asynchronous-vs-synchronous-execution-what-does-it-really-mean">async</a>, there is extensive usage of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises</a>.
+			</p>
+			<h3>Basic usage:</h3>
+			<pre>
+				<code class="javascript"></code>
+			</pre>
+		</section>
 	</main>
 
 </body>
@@ -75,6 +94,8 @@ clipboard.on('success', function(e) {
 
     e.clearSelection();
 });
+
+hljs.initHighlightingOnLoad();
 </script>
 
 </html>
