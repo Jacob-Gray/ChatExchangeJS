@@ -14,7 +14,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
 
 	<!-- Syntax -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github-gist.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
 </head>
 
@@ -72,10 +72,22 @@
 			<p>
 				ChatExchangeJS is built to be simple to use. Because Node.js requests are <a href="http://stackoverflow.com/questions/748175/asynchronous-vs-synchronous-execution-what-does-it-really-mean">async</a>, there is extensive usage of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises</a>.
 			</p>
-			<h3>Basic usage:</h3>
-			<pre>
-				<code class="javascript"></code>
-			</pre>
+			<pre><code class="javascript">var Client = require("chatexchangejs");
+
+//Enter the bot users creds here
+var user = {email:"myemail", password: "mypassword", roomID:133210};
+
+function Room(room) {
+    room.on("message", msg => {
+        console.log("New Message!", msg.content);
+    });
+}
+
+//Create new client for site
+var me = new Client("stackoverflow.com");
+
+//Login to site with username and password
+me.login(user.email, user.password).then(session => session.join(user.roomID).then(Room));</code></pre>
 		</section>
 	</main>
 
