@@ -5,7 +5,7 @@ body, html{
 }
 
 header{
-	padding: 75px 0;
+	padding: 75px 10px;
 	color:white;
 	margin:auto;
 	position:relative;
@@ -17,22 +17,68 @@ header > *{
 	position:relative;
 	z-index:1;
 }
-header:after{
-	content:"";
 
-
-	background: #3196d2; /* fallback for old browsers */
-	background: -webkit-linear-gradient(to bottom, #3196d2, #5096ec); /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to bottom, #3196d2, #5096ec);
-
+.background-t, .background-b{
+	background: linear-gradient(to right, rgba(252, 101, 255, 0.8), #5096ec), linear-gradient(to left, rgba(255,255,255,0.8), #5096ec), linear-gradient(to bottom, #3196d2, #5096ec);
 	position:absolute;
 	height:100%;
-	top:0;
-	left:-20%;
-	right:-20%;
-
-	border-radius: 0 0 70% 70%;
+	left: -100px;
+	right: -100px;
 }
+
+.background-t{
+	border-radius: 100%/100px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	top: 0;
+}
+
+.background-b{
+	border-radius: 100%/80px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	bottom: 0;
+}
+
+
+
+.circle, .circle-m, .circle-l{
+	background: rgba(255, 255, 255, 0.1);
+	position:absolute;
+	border-radius: 50%;
+	top:75%;
+}
+
+.circle{
+	width:75%;
+	height:75vw;
+	left:12.5%;
+}
+
+.circle-m, .circle-l{
+	height:200px;
+	left:50%;
+	transform:translate(-50%);
+}
+
+.circle-m{
+		width:50%;
+}
+
+.circle-l{
+	width:80%;
+}
+
+@media screen and (max-width: 480px){
+	header{
+		font-size: .8em;
+		padding: 50px 10px;
+	}
+	.circle-m, .circle-l, .circle{
+		top:85%;
+	}
+}
+
 
 .npm-copied{
 	opacity:0;
@@ -53,9 +99,10 @@ header pre{
 	margin:20px auto;
 	margin-top:30px;
 	padding:15px 20px;
-	background:white;
-	border-radius: 3px;
-	color:#5096ec;
+	color: white;
+	background: rgba(255,255,255,0.2);
+	border: 1px solid rgba(255,255,255,0.1);
+	border-radius: 4px;
 	cursor:pointer;
 	width:200px;
 	transition: .3s;
@@ -80,8 +127,7 @@ h2{
 
 section{
 	border-left: 3px solid grey;
-	padding:1px;
-	padding-left: 20px;
+	    padding: 1px 20px;
 }
 
 section pre code.hljs {
@@ -90,6 +136,44 @@ section pre code.hljs {
 
 section .hljs-keyword, section .hljs-selector-tag, section.hljs-type {
     color: #E91E63;
+}
+footer{
+	position:relative;
+	overflow:hidden;
+	padding-top:30px;
+}
+
+.love{
+	color:#E91E63;
+}
+
+
+footer p{
+	position:relative;
+	z-index:1;
+	text-align:center;
+	color:white;
+}
+
+.links a{
+	color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  display: inline-block;
+  vertical-align: top;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.by a{
+	color:gold;
+	text-decoration:none;
+}
+
+.by{
+	font-size: 11px;
 }
 
 section.warn {
@@ -121,6 +205,9 @@ section pre{
 	background:#f5f5f5;
 	border-radius: 3px;
 	color:#e91e63;
+	max-width: calc(100vw - 63px);
+box-sizing: border-box;
+overflow: auto;
 }
 
 section code{

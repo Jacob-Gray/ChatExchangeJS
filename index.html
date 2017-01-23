@@ -10,7 +10,7 @@
 	<meta name="description" content="A Node.js wrapper for the Stack Exchange chat system, allowing the ability to interact with the chat.">
 	<meta name="author" content="Jacob Gray">
 
-	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/styles.min.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
 
 	<!-- Syntax -->
@@ -21,6 +21,13 @@
 <body>
 
 	<header>
+
+		<div class="background-t">
+			<div class="circle"></div>
+			<div class="circle-m"></div>
+			<div class="circle-l"></div>
+		</div>
+
 		<h1>ChatExchangeJS</h1>
 		<span>A Node.js wrapper for the Stack Exchange chat system.</span>
 		<pre data-clipboard-text="npm install chatexchange" class="npm-install">npm install chatexchangejs</pre>
@@ -88,8 +95,23 @@ var me = new Client("stackoverflow.com");
 
 //Login to site with username and password
 me.login(user.email, user.password).then(session => session.join(user.roomID).then(Room));</code></pre>
+	<p>
+	Further examples, as well as documentation, will be available in the future, as the beta progresses.
+	</p>
 		</section>
 	</main>
+	<footer>
+		<div class="background-b"></div>
+		<p class="links">
+			<a href="/">Home</a>
+			<a href="docs">Documentation</a>
+			<a href="https://github.com/Jacob-Gray">Github</a>
+			<a href="https://www.npmjs.com/package/chatexchangejs">NPM</a>
+		</p>
+		<p class="by">
+			Made with <span class="love">❤</span> by <a href="https://github.com/Jacob-Gray">Jacob Gray</a>.
+		</p>
+	</footer>
 
 </body>
 
