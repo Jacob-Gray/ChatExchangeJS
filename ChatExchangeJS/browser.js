@@ -1,5 +1,8 @@
 var request_lib = require("request"),
-	_ = require('cheerio'),
+	{
+		URL
+	} = require("url"),
+	cheerio = require('cheerio'),
 	WebSocket = require('ws');
 
 const https = require("https"),
@@ -304,8 +307,6 @@ function Browser(client) {
 		this.stackexchange.submit = config.login.stackexchange.submit(host);
 		this.stackexchange.confirm = config.login.stackexchange.confirm(host);
 
-		this.request()
-
 		return this.openid_login().then(this.site_login);
 
 
@@ -356,7 +357,10 @@ class Browser2 {
 						output = body;
 					}
 
-					resolve(output);
+					resolve({
+						body: output,
+						response: res
+					});
 				});
 			});
 
@@ -370,11 +374,32 @@ class Browser2 {
 		});
 	}
 
-	async login(host, email, password){
+	async getKey(url) {
 
-		let links = config.stackexchange(host);
+		let responseHTML = await this.request(url, "GET"),
+			$ = cheerio.load(responseHTML.body);
 
-		console.log(links)
+		return $("input[name='fkey']").val()
+	}
+
+	async login(host, email, password) {
+
+		let links = config.stackexchange(host),
+			key;
+
+		try {
+			key = await this.getKey(links.key);
+		} catch (e) {
+			throw new Error(`Failed to fetch key for session from ${links.key}`);
+		}
+
+		let loginResponse = await this.request(links.submit, "POST", {
+			email: email,
+			password: password,
+			fkey: key
+		});
+
+		console.log(loginResponse.body)
 	}
 }
 
