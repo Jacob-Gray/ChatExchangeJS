@@ -1,5 +1,6 @@
-var Client = require("./ChatExchangeJS/client");
+console.log("RUNNING")
 
+var Client = require("./ChatExchangeJS/client");
 var user = require("./user.json")
 
 //Function called when joining a room
@@ -65,6 +66,8 @@ function Session(me) {
 
 //Create new client for site
 var me = new Client("stackoverflow.com");
+
+console.log("Logging in")
 
 //Login to site with username and password
 me.login(user.email, user.password).then(Session);

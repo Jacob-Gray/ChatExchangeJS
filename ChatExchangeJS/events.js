@@ -1,63 +1,71 @@
 const eventTypes = {
-	1:"message",
-	2:"messageEdited",
-	3:"userEntered",
-	4:"userLeft",
-	5:"roomNameChanged",
-	6:"messageStarred",
-	8:"userMentioned",
-	9:"messageFlagged",
-	10:"messageDeleted",
-	11:"fileAdded",
-	12:"moderatorFlag",
-	13:"userSettingsChanged",
-	14:"globalNotification",
-	15:"accountLevelChanged",
-	16:"userNotification",
-	17:"invitation",
-	18:"messageReply",
-	19:"messageMovedOut",
-	20:"messagedMovedIn",
-	21:"timeBreak",
-	22:"feedTicker",
-	29:"userSuspended",
-	30:"userMerged",
+	1: "message",
+	2: "messageEdited",
+	3: "userEntered",
+	4: "userLeft",
+	5: "roomNameChanged",
+	6: "messageStarred",
+	8: "userMentioned",
+	9: "messageFlagged",
+	10: "messageDeleted",
+	11: "fileAdded",
+	12: "moderatorFlag",
+	13: "userSettingsChanged",
+	14: "globalNotification",
+	15: "accountLevelChanged",
+	16: "userNotification",
+	17: "invitation",
+	18: "messageReply",
+	19: "messageMovedOut",
+	20: "messagedMovedIn",
+	21: "timeBreak",
+	22: "feedTicker",
+	29: "userSuspended",
+	30: "userMerged",
 };
 
-function ChatEvent(info){
+class ChatEvent {
 
-	for(var x in info){
-		this[x] = info[x];
+	constructor(info) {
+
+		for (var x in info) {
+			this[x] = info[x];
+		}
+
+		this.type = eventTypes[this.event_type];
 	}
 
-	this.type = eventTypes[this.event_type];
 
-	this.reply = msg => {
-		if(this.message_id) this.room.sendMessage(":" + this.message_id + " " + msg);
+	reply(msg) {
+		if (this.message_id) this.room.sendMessage(":" + this.message_id + " " + msg);
 	}
 }
 
-function EventManager(room){
+class EventManager {
 
-	this.room = room;
+	constructor(room) {
+		this.room = room;
 
-	this.events = {};
+		this.events = {};
+	}
 
-	this.listen = (eventName, callback) => {
 
-		if(!this.events[eventName]) this.events[eventName] = [];
+
+	listen(eventName, callback) {
+
+		if (!this.events[eventName]) this.events[eventName] = [];
 
 		this.events[eventName].push(callback);
 	}
 
-	this.trigger = function(eventName, data){
+	trigger(eventName, data) {
 
-		if(this.events[eventName]){
+		if (this.events[eventName]) {
 			this.events[eventName].forEach(callback => callback(data));
 		}
 	}
 
-	this.listener = websocket =>{
+	listener(websocket) {
 
 		websocket.on("message", data => {
 
@@ -65,7 +73,7 @@ function EventManager(room){
 
 			var roomEvent = data["r" + this.room.id];
 
-			if(roomEvent && roomEvent.e){
+			if (roomEvent && roomEvent.e) {
 
 				console.log(roomEvent)
 				roomEvent.e.forEach(item => {
@@ -74,7 +82,7 @@ function EventManager(room){
 
 					e.room = this.room;
 
-					if(e.type) this.trigger(e.type, e);
+					if (e.type) this.trigger(e.type, e);
 				})
 			}
 

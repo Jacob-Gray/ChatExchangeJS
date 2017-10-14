@@ -1,21 +1,26 @@
-var Browser = require("./browser");
-var Room = require("./room");
+const Browser = require("./browser"),
+	Room = require("./room");
 
-function Client(host) {
-  this.host = host;
+class Client {
 
-  this._br = new Browser(this);
+	constructor(host) {
+		this.host = host;
 
-  this.login = (email, password) => {
-    return this._br.login(this.host, email, password);
-  };
+		this._br = new Browser(this);
+	}
 
-  this.join = (room_id) => {
 
-    if (this._br.loggedIn){
-      return new Room(this, room_id).join();
-    }
-    throw new Error("Cannot join room " + room_id + "@" + this.host + ": Not logged in!");
-  }
+	login(email, password) {
+		return this._br.login(this.host, email, password);
+	};
+
+	join(room_id) {
+
+		if (this._br.loggedIn) {
+			return new Room(this, room_id).join();
+		}
+		
+		throw new Error("Cannot join room " + room_id + "@" + this.host + ": Not logged in!");
+	}
 }
 module.exports = Client;

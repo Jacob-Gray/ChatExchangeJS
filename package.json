@@ -1,16 +1,20 @@
 {
-  "name": "chatexchangejs",
-  "version": "1.0.1",
-  "description": "A Node.js wrapper for the Stack Exchange chat system",
-  "main": "ChatExchangeJS/client.js",
-  "repository": "git@github.com:Jacob-Gray/ChatExchangeJS.git",
-  "author": "Jacob Gray <jacob@jacobgray.me>",
-  "license": "GPL-3.0",
+	"name": "chatexchangejs",
+	"version": "1.0.1",
+	"description": "A Node.js wrapper for the Stack Exchange chat system",
+	"main": "ChatExchangeJS/client.js",
+	"repository": "git@github.com:Jacob-Gray/ChatExchangeJS.git",
+	"author": "Jacob Gray <jacob@jacobgray.me>",
+	"license": "GPL-3.0",
 	"keywords": ["stackexchange", "chat", "chatexchange", "api", "chatexchangejs"],
-	"website":"https://chatexchange.js.org",
-  "dependencies": {
-    "cheerio": "^0.22.0",
-    "request": "^2.79.0",
-    "ws": "^1.1.1"
-  }
+	"scripts": {
+		"up": "up.cmd",
+		"build": "docker build --no-cache -t chatexchangejs ."
+	},
+	"website": "https://chatexchange.js.org",
+	"dependencies": {
+		"cheerio": "^0.22.0",
+		"request": "^2.79.0",
+		"ws": "^1.1.1"
+	}
 }
