@@ -1,22 +1,22 @@
-# ChatExchangeJS
-
->This project is still in the beta stage, and may be unstable. Use with caution.
+# ChatExchangeJS v1.1 - Requires Node 8+ due to bugs in async
+ 
+>The current version (1) is broken. Currently re-writing.
 
 A Node.js wrapper for the Stack Exchange chat system, allowing the ability to interact with the chat.
 
 This library is still missing some major features, especially when it comes to error reporting. You may run into situations where the library simply doesn't work, and the errors outputted aren't that useful. These should be fixed in the upcoming weeks.
 
-###Features:
+### Features:
 - Message API, allowing to send and receive messages
 - Chat event listener, so you can listen for any event from the chat room
 
-###Installation
+### Installation
 Install from NPM:
 ```
 npm install chatexchangejs
 ```
 
-###Usage:
+### Usage:
 
 ```javascript
 var Client = require("chatexchangejs");
@@ -102,3 +102,8 @@ Then, just run `node demo`.
 Your chat bot is now running in the [ChatExchangeJS Beta room](http://chat.stackoverflow.com/rooms/133210/chatexchange-js-beta) on stackoverflow.
 
 *Don't leave the demo file running! It's for demo purposes only, and gives anyone the ability to edit or delete your bot's messages!*
+
+
+## Development
+
+This repo contains a dockerfile that will download all the dependencies and run the demo script. On windows, run `npm run build` and `npm run up` to start it.
