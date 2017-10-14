@@ -19,7 +19,7 @@ function Room(room) {
 
 		console.log(command)
 
-		switch(command.shift()){
+		switch (command.shift()) {
 			case "!edit":
 				room.editMessage(command.shift(), command.join(" "));
 				break;
@@ -64,10 +64,14 @@ function Session(me) {
 	me.join(133210).then(Room);
 }
 
-//Create new client for site
-var me = new Client("stackoverflow.com");
+async function main() {
+	//Create new client for site
+	var me = new Client("stackoverflow.com");
 
-console.log("Logging in")
+	console.log("Logging in")
 
-//Login to site with username and password
-me.login(user.email, user.password).then(Session);
+	//Login to site with username and password
+	let session = await me.login(user.email, user.password);
+}
+
+main();

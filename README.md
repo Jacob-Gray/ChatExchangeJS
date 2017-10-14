@@ -1,5 +1,5 @@
-# ChatExchangeJS v1.1
-
+# ChatExchangeJS v1.1 - Requires Node 8+ due to bugs in async
+ 
 >The current version (1) is broken. Currently re-writing.
 
 A Node.js wrapper for the Stack Exchange chat system, allowing the ability to interact with the chat.

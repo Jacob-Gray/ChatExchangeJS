@@ -370,7 +370,7 @@ class Browser2 {
 		});
 	}
 
-	login(host, email, password){
+	async login(host, email, password){
 
 		let links = config.stackexchange(host);
 
