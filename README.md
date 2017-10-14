@@ -6,17 +6,17 @@ A Node.js wrapper for the Stack Exchange chat system, allowing the ability to in
 
 This library is still missing some major features, especially when it comes to error reporting. You may run into situations where the library simply doesn't work, and the errors outputted aren't that useful. These should be fixed in the upcoming weeks.
 
-###Features:
+### Features:
 - Message API, allowing to send and receive messages
 - Chat event listener, so you can listen for any event from the chat room
 
-###Installation
+### Installation
 Install from NPM:
 ```
 npm install chatexchangejs
 ```
 
-###Usage:
+### Usage:
 
 ```javascript
 var Client = require("chatexchangejs");
