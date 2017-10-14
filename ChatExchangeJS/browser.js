@@ -313,4 +313,69 @@ function Browser(client) {
 
 }
 
-module.exports = Browser
+class Browser2 {
+
+	constructor(client) {
+		this.client = client;
+	}
+
+	request(uri, method, data = {}, urlargs = {}) {
+
+		return new Promise((resolve, reject) => {
+
+			if (method === "GET") urlargs = data;
+
+			const postData = querystring.stringify(data),
+				args = querystring.stringify(urlargs),
+				options = new URL(uri + "?" + args);
+
+
+			options.method = method;
+			options.headers = {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Content-Length': Buffer.byteLength(postData)
+			}
+
+			const req = https.request(options, res => {
+
+				res.setEncoding('utf8');
+
+				let data = [];
+
+				res.on('data', chunk => {
+					data.push(chunk);
+				});
+
+				res.on('end', () => {
+					let body = data.join(""),
+						output;
+
+					try {
+						output = JSON.parse(body);
+					} catch (e) {
+						output = body;
+					}
+
+					resolve(output);
+				});
+			});
+
+			req.on('error', e => {
+				reject(e);
+			});
+
+			// write data to request body
+			req.write(postData);
+			req.end();
+		});
+	}
+
+	login(host, email, password){
+
+		let links = config.stackexchange(host);
+
+		console.log(links)
+	}
+}
+
+module.exports = Browser2
