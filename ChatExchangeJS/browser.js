@@ -1,9 +1,15 @@
-var request_lib = require("request"),
+var Request = require("request"),
 	{
 		URL
 	} = require("url"),
 	cheerio = require('cheerio'),
 	WebSocket = require('ws');
+
+const session = Request.jar(),
+	request = Request.defaults({
+		jar: session,
+		followAllRedirects: true,
+	});
 
 const https = require("https"),
 	querystring = require("querystring");
@@ -320,86 +326,117 @@ class Browser2 {
 		this.client = client;
 	}
 
-	request(uri, method, data = {}, urlargs = {}) {
+	request(options) {
 
 		return new Promise((resolve, reject) => {
 
-			if (method === "GET") urlargs = data;
-
-			const postData = querystring.stringify(data),
-				args = querystring.stringify(urlargs),
-				options = new URL(uri + "?" + args);
-
-
-			options.method = method;
-			options.headers = {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Content-Length': Buffer.byteLength(postData)
-			}
-
-			const req = https.request(options, res => {
-
-				res.setEncoding('utf8');
-
-				let data = [];
-
-				res.on('data', chunk => {
-					data.push(chunk);
-				});
-
-				res.on('end', () => {
-					let body = data.join(""),
-						output;
-
-					try {
-						output = JSON.parse(body);
-					} catch (e) {
-						output = body;
-					}
-
-					resolve({
-						body: output,
-						response: res
-					});
-				});
+			request(options, (err, res, body) => {
+				if (err) reject(err);
+				resolve(res);
 			});
-
-			req.on('error', e => {
-				reject(e);
-			});
-
-			// write data to request body
-			req.write(postData);
-			req.end();
 		});
 	}
 
-	async getKey(url) {
+	cookies(host) {
+		let cookies = session.getCookies(host),
+			output = {};
 
-		let responseHTML = await this.request(url, "GET"),
-			$ = cheerio.load(responseHTML.body);
+		cookies.forEach(cookie => {
+			output[cookie.key] = cookie;
+		});
 
-		return $("input[name='fkey']").val()
+		return output;
+	}
+
+	async html(url) {
+
+		let responseHTML = await this.request({
+			method: "GET",
+			url: url
+		});
+
+		return cheerio.load(responseHTML.body);
+	}
+
+	async getValues(url, els) {
+
+		let $ = await this.html(url),
+			output = {};
+
+		for (let el of els) {
+
+			el = $(`[name="${el}"]`);
+
+			output[el.attr("name")] = el.val();
+		}
+
+		return output;
+	}
+
+	async handleAccountConfirmation(response) {
+
+		if (response.request.uri.href.indexOf("https://openid.stackexchange.com/account/prompt") > -1) {
+
+			console.log("NEEDS ACCOUNT CONFIRMATION")
+
+			let data = await this.getValues(response.request.uri.href, ["fkey", "session"]);
+
+			console.log(data)
+
+			let openid_response = await this.request({
+				method: "POST",
+				url: "https://openid.stackexchange.com/account/prompt/submit",
+				form: data
+			});
+
+			console.log(openid_response.request.uri.href)
+		}
+	}
+
+	async openid(email, password) {
+
+		let fkey = (await this.getValues(config.openid.key, ["fkey"])).fkey;
+
+		let openid_response = await this.request({
+			method: "POST",
+			url: config.openid.submit,
+			form: {
+				email: email,
+				password: password,
+				fkey: fkey
+			}
+		});
+
+		if (!this.cookies(config.openid.submit).usr) throw new Error("Was unable to login with the provided credentials, please verify them.");
+	}
+
+	async siteLogin(host) {
+
+		let stackexchange = config.stackexchange(host),
+			fkey = (await this.getValues(stackexchange.key, ["fkey"])).fkey;
+
+		let site_response = await this.request({
+			method: "POST",
+			url: stackexchange.submit,
+			form: {
+				'oauth_version': '',
+				'oauth_server': '',
+				'openid_identifier': 'https://openid.stackexchange.com/',
+				fkey: fkey
+			}
+		});
+
+		this.handleAccountConfirmation(site_response);
 	}
 
 	async login(host, email, password) {
 
-		let links = config.stackexchange(host),
-			key;
+		let x = await this.getValues(config.openid.key, ["fkey"])
 
-		try {
-			key = await this.getKey(links.key);
-		} catch (e) {
-			throw new Error(`Failed to fetch key for session from ${links.key}`);
-		}
+		console.log(x)
 
-		let loginResponse = await this.request(links.submit, "POST", {
-			email: email,
-			password: password,
-			fkey: key
-		});
-
-		console.log(loginResponse.body)
+		await this.openid(email, password);
+		await this.siteLogin(host);
 	}
 }
 

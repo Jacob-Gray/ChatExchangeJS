@@ -6,7 +6,13 @@
 	"repository": "git@github.com:Jacob-Gray/ChatExchangeJS.git",
 	"author": "Jacob Gray <jacob@jacobgray.me>",
 	"license": "GPL-3.0",
-	"keywords": ["stackexchange", "chat", "chatexchange", "api", "chatexchangejs"],
+	"keywords": [
+		"stackexchange",
+		"chat",
+		"chatexchange",
+		"api",
+		"chatexchangejs"
+	],
 	"scripts": {
 		"up": "up.cmd",
 		"build": "docker build --no-cache -t chatexchangejs ."
