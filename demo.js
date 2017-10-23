@@ -66,7 +66,7 @@ function Session(me) {
 
 async function main() {
 	//Create new client for site
-	var me = new Client("stackoverflow.com");
+	var me = new Client("3dprinting.stackexchange.com");
 
 	console.log("Logging in")
 

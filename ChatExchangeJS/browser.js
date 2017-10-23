@@ -1,6 +1,15 @@
-var request_lib = require("request"),
-	_ = require('cheerio'),
+var Request = require("request"),
+	{
+		URL
+	} = require("url"),
+	cheerio = require('cheerio'),
 	WebSocket = require('ws');
+
+const session = Request.jar(),
+	request = Request.defaults({
+		jar: session,
+		followAllRedirects: true,
+	});
 
 const https = require("https"),
 	querystring = require("querystring");
@@ -304,8 +313,6 @@ function Browser(client) {
 		this.stackexchange.submit = config.login.stackexchange.submit(host);
 		this.stackexchange.confirm = config.login.stackexchange.confirm(host);
 
-		this.request()
-
 		return this.openid_login().then(this.site_login);
 
 
@@ -319,62 +326,117 @@ class Browser2 {
 		this.client = client;
 	}
 
-	request(uri, method, data = {}, urlargs = {}) {
+	request(options) {
 
 		return new Promise((resolve, reject) => {
 
-			if (method === "GET") urlargs = data;
-
-			const postData = querystring.stringify(data),
-				args = querystring.stringify(urlargs),
-				options = new URL(uri + "?" + args);
-
-
-			options.method = method;
-			options.headers = {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Content-Length': Buffer.byteLength(postData)
-			}
-
-			const req = https.request(options, res => {
-
-				res.setEncoding('utf8');
-
-				let data = [];
-
-				res.on('data', chunk => {
-					data.push(chunk);
-				});
-
-				res.on('end', () => {
-					let body = data.join(""),
-						output;
-
-					try {
-						output = JSON.parse(body);
-					} catch (e) {
-						output = body;
-					}
-
-					resolve(output);
-				});
+			request(options, (err, res, body) => {
+				if (err) reject(err);
+				resolve(res);
 			});
-
-			req.on('error', e => {
-				reject(e);
-			});
-
-			// write data to request body
-			req.write(postData);
-			req.end();
 		});
 	}
 
-	async login(host, email, password){
+	cookies(host) {
+		let cookies = session.getCookies(host),
+			output = {};
 
-		let links = config.stackexchange(host);
+		cookies.forEach(cookie => {
+			output[cookie.key] = cookie;
+		});
 
-		console.log(links)
+		return output;
+	}
+
+	async html(url) {
+
+		let responseHTML = await this.request({
+			method: "GET",
+			url: url
+		});
+
+		return cheerio.load(responseHTML.body);
+	}
+
+	async getValues(url, els) {
+
+		let $ = await this.html(url),
+			output = {};
+
+		for (let el of els) {
+
+			el = $(`[name="${el}"]`);
+
+			output[el.attr("name")] = el.val();
+		}
+
+		return output;
+	}
+
+	async handleAccountConfirmation(response) {
+
+		if (response.request.uri.href.indexOf("https://openid.stackexchange.com/account/prompt") > -1) {
+
+			console.log("NEEDS ACCOUNT CONFIRMATION")
+
+			let data = await this.getValues(response.request.uri.href, ["fkey", "session"]);
+
+			console.log(data)
+
+			let openid_response = await this.request({
+				method: "POST",
+				url: "https://openid.stackexchange.com/account/prompt/submit",
+				form: data
+			});
+
+			console.log(openid_response.request.uri.href)
+		}
+	}
+
+	async openid(email, password) {
+
+		let fkey = (await this.getValues(config.openid.key, ["fkey"])).fkey;
+
+		let openid_response = await this.request({
+			method: "POST",
+			url: config.openid.submit,
+			form: {
+				email: email,
+				password: password,
+				fkey: fkey
+			}
+		});
+
+		if (!this.cookies(config.openid.submit).usr) throw new Error("Was unable to login with the provided credentials, please verify them.");
+	}
+
+	async siteLogin(host) {
+
+		let stackexchange = config.stackexchange(host),
+			fkey = (await this.getValues(stackexchange.key, ["fkey"])).fkey;
+
+		let site_response = await this.request({
+			method: "POST",
+			url: stackexchange.submit,
+			form: {
+				'oauth_version': '',
+				'oauth_server': '',
+				'openid_identifier': 'https://openid.stackexchange.com/',
+				fkey: fkey
+			}
+		});
+
+		this.handleAccountConfirmation(site_response);
+	}
+
+	async login(host, email, password) {
+
+		let x = await this.getValues(config.openid.key, ["fkey"])
+
+		console.log(x)
+
+		await this.openid(email, password);
+		await this.siteLogin(host);
 	}
 }
 
