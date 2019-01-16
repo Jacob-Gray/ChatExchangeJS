@@ -50,6 +50,10 @@ export namespace HTTPClient {
 
 
 export class HTTPClient {
+	/**
+	 * Base request functionality.
+	 * @param options Object containing options for the request. See interface for more in depth info.
+	 */
 	static Request(options: HTTPClient.RequestOptions): Promise<HTTPClient.Response> {
 		return new Promise((resolve, reject) => {
 			let request: http.ClientRequest;
@@ -90,10 +94,20 @@ export class HTTPClient {
 		});
 	}
 
+	/**
+	 * Simple wrapper to querystring.stringify(). Provides the aditional functionality of prepending a path.
+	 * @param args Object to stringify.
+	 * @param path Path to prepend to stringified args
+	 */
 	static Args(args: object, path: string = ''): string {
 		return `${path}?${querystring.stringify(args)}`;
 	}
 
+	/**
+	 * Send a GET request to the specified url, with optional querystring arguments.
+	 * @param url Valid url parsable by the URL module. Will error if url not valid.
+	 * @param data Data to send as querystring args.
+	 */
 	static Get(url: string, data?: object) {
 		const parsedURL = new URL(url);
 
@@ -105,6 +119,11 @@ export class HTTPClient {
 		});
 	}
 
+	/**
+	 * Send a POST request to the specified url, with optional body data.
+	 * @param url Valid url parsable by the URL module. Will error if url not valid.
+	 * @param data Data to send as request body.
+	 */
 	static Post(url: string, data?: object) {
 		const parsedURL = new URL(url);
 

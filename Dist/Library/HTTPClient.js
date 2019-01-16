@@ -8,6 +8,10 @@ const http_1 = __importDefault(require("http"));
 const url_1 = require("url");
 const querystring_1 = __importDefault(require("querystring"));
 class HTTPClient {
+    /**
+     * Base request functionality.
+     * @param options Object containing options for the request. See interface for more in depth info.
+     */
     static Request(options) {
         return new Promise((resolve, reject) => {
             let request;
@@ -42,9 +46,19 @@ class HTTPClient {
             request.end();
         });
     }
+    /**
+     * Simple wrapper to querystring.stringify(). Provides the aditional functionality of prepending a path.
+     * @param args Object to stringify.
+     * @param path Path to prepend to stringified args
+     */
     static Args(args, path = '') {
         return `${path}?${querystring_1.default.stringify(args)}`;
     }
+    /**
+     * Send a GET request to the specified url, with optional querystring arguments.
+     * @param url Valid url parsable by the URL module. Will error if url not valid.
+     * @param data Data to send as querystring args.
+     */
     static Get(url, data) {
         const parsedURL = new url_1.URL(url);
         return this.Request({
@@ -54,6 +68,11 @@ class HTTPClient {
             https: parsedURL.protocol === 'https:',
         });
     }
+    /**
+     * Send a POST request to the specified url, with optional body data.
+     * @param url Valid url parsable by the URL module. Will error if url not valid.
+     * @param data Data to send as request body.
+     */
     static Post(url, data) {
         const parsedURL = new url_1.URL(url);
         return this.Request({
