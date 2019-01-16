@@ -4,7 +4,7 @@
 	"description": "A Node.js wrapper for the Stack Exchange chat system",
 	"main": "ChatExchangeJS/client.js",
 	"repository": "git@github.com:Jacob-Gray/ChatExchangeJS.git",
-	"author": "Jacob Gray <jacob@jacobgray.me>",
+	"author": "Jacob Gray <jgraycs@gmail.com>",
 	"license": "GPL-3.0",
 	"keywords": [
 		"stackexchange",
@@ -20,7 +20,9 @@
 	"website": "https://chatexchange.js.org",
 	"dependencies": {
 		"cheerio": "^0.22.0",
-		"request": "^2.79.0",
 		"ws": "^1.1.1"
+	},
+	"devDependencies": {
+		"@types/node": "^10.12.18"
 	}
 }
