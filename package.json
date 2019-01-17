@@ -8,6 +8,7 @@
 	"license": "GPL-3.0",
 	"keywords": [
 		"stackexchange",
+		"stackoverflow",
 		"chat",
 		"chatexchange",
 		"api",
@@ -23,6 +24,7 @@
 		"ws": "^1.1.1"
 	},
 	"devDependencies": {
-		"@types/node": "^10.12.18"
+		"@types/node": "^10.12.18",
+		"@types/cheerio": "^0.22.10"
 	}
 }
