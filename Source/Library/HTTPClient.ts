@@ -3,7 +3,7 @@ import http from 'http';
 import { URL } from 'url';
 import querystring from 'querystring';
 
-export namespace HTTPClient {
+export namespace HttpClient {
 	export interface Request extends https.RequestOptions {
 		/**
 		 * The host this request is attempting to connect to. (ie www.stackexchange.com)
@@ -76,12 +76,12 @@ export namespace HTTPClient {
 /**
  * Simple wrapper for the Node HTTP(S) functionality to make it a little less painful to work with.
  */
-export class HTTPClient {
+export class HttpClient {
 	/**
 	 * Base request functionality.
 	 * @param options Object containing options for the request. See interface for more in depth info.
 	 */
-	static Request(options: HTTPClient.RequestTypes): Promise<HTTPClient.Response> {
+	static Request(options: HttpClient.RequestTypes): Promise<HttpClient.Response> {
 		return new Promise((resolve, reject) => {
 			let request: http.ClientRequest;
 
@@ -128,7 +128,7 @@ export class HTTPClient {
 				});
 
 				response.on('end', () => {
-					const parsed: HTTPClient.Response = {
+					const parsed: HttpClient.Response = {
 						original: response,
 						request: request,
 						body: data.toString(),
@@ -192,7 +192,7 @@ export class HTTPClient {
 	 */
 	static Post(url: string, form?: object, headers?: {}) {
 		const parsedURL = new URL(url);
-		let options: HTTPClient.POSTRequest | HTTPClient.POSTRequestForm = {
+		let options: HttpClient.POSTRequest | HttpClient.POSTRequestForm = {
 			type: 'POSTRequest',
 			method: 'POST',
 			host: parsedURL.host,

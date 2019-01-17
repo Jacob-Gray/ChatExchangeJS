@@ -10,7 +10,7 @@ const querystring_1 = __importDefault(require("querystring"));
 /**
  * Simple wrapper for the Node HTTP(S) functionality to make it a little less painful to work with.
  */
-class HTTPClient {
+class HttpClient {
     /**
      * Base request functionality.
      * @param options Object containing options for the request. See interface for more in depth info.
@@ -127,4 +127,4 @@ class HTTPClient {
         return this.Request(options);
     }
 }
-exports.HTTPClient = HTTPClient;
+exports.HttpClient = HttpClient;

@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const cheerio_1 = __importDefault(require("cheerio"));
 const url_1 = require("url");
-const HTTPClient_1 = require("./HTTPClient");
+const HttpClient_1 = require("./HttpClient");
 /**
  * Basic browser class that allows cookie storage, handles redirection, and provides access to the HTML parser.
  */
@@ -118,7 +118,7 @@ class Browser {
      */
     Get(url, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield HTTPClient_1.HTTPClient.Get(url, data, {
+            const response = yield HttpClient_1.HttpClient.Get(url, data, {
                 cookie: this.StringifyCookies(),
             });
             return this.HandleResponse(response, url);
@@ -131,7 +131,7 @@ class Browser {
      */
     Post(url, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield HTTPClient_1.HTTPClient.Post(url, data, {
+            const response = yield HttpClient_1.HttpClient.Post(url, data, {
                 cookie: this.StringifyCookies(),
             });
             return this.HandleResponse(response, url);

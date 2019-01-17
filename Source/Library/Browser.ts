@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
 import { URL } from 'url';
-import { HTTPClient } from './HTTPClient';
+import { HttpClient } from './HttpClient';
 
 export namespace Browser {
 	/**
@@ -32,7 +32,7 @@ export namespace Browser {
 		/**
 		 * Response from latest request.
 		 */
-		response: HTTPClient.Response,
+		response: HttpClient.Response,
 		/**
 		 * Source of the current page. (Same as response.body)
 		 */
@@ -59,7 +59,7 @@ export class Browser {
 	 * Takes a response and updates the cookies stored in this browser based upon the set-cookie header.
 	 * @param response Response from a HTTPClient request.
 	 */
-	private UpdateCookies(response: HTTPClient.Response) {
+	private UpdateCookies(response: HttpClient.Response) {
 		if (response.original.headers['set-cookie']) {
 
 			/**
@@ -126,7 +126,7 @@ export class Browser {
 	 * @param response Response from HTTPClient request.
 	 * @param url Url from request.
 	 */
-	private async HandleResponse(response: HTTPClient.Response, url: string): Promise<Browser.Page> {
+	private async HandleResponse(response: HttpClient.Response, url: string): Promise<Browser.Page> {
 		this.UpdateCookies(response);
 
 		const location = response.original.headers.location;
@@ -157,7 +157,7 @@ export class Browser {
 	 * @param data Data to send as querystring arguments.
 	 */
 	public async Get(url: string, data?: object): Promise<Browser.Page> {
-		const response = await HTTPClient.Get(url, data, {
+		const response = await HttpClient.Get(url, data, {
 			cookie: this.StringifyCookies(),
 		});
 
@@ -170,7 +170,7 @@ export class Browser {
 	 * @param data Data to send as request body.
 	 */
 	public async Post(url: string, data?: object): Promise<Browser.Page> {
-		const response = await HTTPClient.Post(url, data, {
+		const response = await HttpClient.Post(url, data, {
 			cookie: this.StringifyCookies(),
 		});
 
