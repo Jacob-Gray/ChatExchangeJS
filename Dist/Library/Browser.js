@@ -59,10 +59,7 @@ function CheckCookieToPath(url, cookie) {
  * @param cookie Cookie to validate with.
  */
 function CheckCookieToProtocol(url, cookie) {
-    if (cookie.secure && url.protocol !== 'https:') {
-        return false;
-    }
-    return true;
+    return cookie.secure ? url.protocol === 'https:' : true;
 }
 /**
  * Ensure that a URL matches the cookie restrictions, as defined by the spec.

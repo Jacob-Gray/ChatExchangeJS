@@ -114,11 +114,7 @@ function CheckCookieToPath(url: URL, cookie: Browser.Cookie): boolean {
  * @param cookie Cookie to validate with.
  */
 function CheckCookieToProtocol(url: URL, cookie: Browser.Cookie): boolean {
-	if (cookie.secure && url.protocol !== 'https:') {
-		return false;
-	}
-
-	return true;
+	return cookie.secure ? url.protocol === 'https:' : true;
 }
 
 /**
