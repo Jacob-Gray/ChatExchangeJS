@@ -16,6 +16,8 @@ import usr from './user.json';
 		return console.log('Sign in failed because a recpatcha was required. Wait a bit before trying again.');
 	}
 
+	console.log('checking sign in');
+
 	let checkSession = await br.Get('https://stackoverflow.com/users/current');
 
 	if (checkSession.location.pathname.indexOf('/users/') === 0) {

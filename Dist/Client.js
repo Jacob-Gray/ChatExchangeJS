@@ -20,6 +20,7 @@ const user_json_1 = __importDefault(require("./user.json"));
     if (loginAttempt.location.pathname === '/nocaptcha') {
         return console.log('Sign in failed because a recpatcha was required. Wait a bit before trying again.');
     }
+    console.log('checking sign in');
     let checkSession = yield br.Get('https://stackoverflow.com/users/current');
     if (checkSession.location.pathname.indexOf('/users/') === 0) {
         console.log('signed in');
